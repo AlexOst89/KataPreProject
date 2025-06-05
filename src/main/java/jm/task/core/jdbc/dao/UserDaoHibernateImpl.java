@@ -12,7 +12,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
 
     @Override
-    public void createUsersTable(Connection connection) {
+    public void createUsersTable() {
 
     }
 

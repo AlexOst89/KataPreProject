@@ -10,13 +10,21 @@ public class Util {
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "admin";
 
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         try {
             Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {
-            throw new SQLException("Не удалось загрузить драйвер базы данных", e);
+            try {
+                throw new SQLException("Не удалось загрузить драйвер базы данных", e);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        try {
+            return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
