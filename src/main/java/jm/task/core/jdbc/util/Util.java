@@ -13,17 +13,9 @@ public class Util {
     public Connection getConnection() {
         try {
             Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            try {
-                throw new SQLException("Не удалось загрузить драйвер базы данных", e);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-        try {
             return DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException("Ошибка подключения к базе данных", e);
         }
     }
 

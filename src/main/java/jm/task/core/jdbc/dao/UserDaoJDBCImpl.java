@@ -12,11 +12,10 @@ public class UserDaoJDBCImpl implements UserDao {
     public UserDaoJDBCImpl() {
 
     }
-    private final Util util = new Util();
 
-    private final Connection connection = util.getConnection();
+    private final Connection connection = new Util().getConnection();
 
-    private static final String createTable = "create table if not exists users (" +
+    private static final String CREATE_TABLE = "create table if not exists users (" +
             "id bigint auto_increment, " +
             "name varchar(45) not null, " +
             "lastName varchar(45) not null, " +
@@ -30,11 +29,10 @@ public class UserDaoJDBCImpl implements UserDao {
 
     private static final Logger logger = Logger.getLogger(UserDaoJDBCImpl.class.getName());
 
-
     public void createUsersTable() {
 
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(createTable);
+            statement.executeUpdate(CREATE_TABLE);
             logger.info("Таблица создана!");
         } catch (SQLException e) {
             logger.info("Не удалось создать таблицу!");
@@ -85,7 +83,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
         List<User> userList = new ArrayList<>();
         try (Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(SELECT_ALL_USERS)) {
+             ResultSet resultSet = statement.executeQuery(SELECT_ALL_USERS)) {
             while (resultSet.next()) {
                 User user = new User(
                         resultSet.getString("name"),
@@ -104,7 +102,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(CLEAN_TABLE)){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CLEAN_TABLE)) {
             preparedStatement.executeUpdate();
             logger.info("Таблица очищена!");
         } catch (SQLException e) {
