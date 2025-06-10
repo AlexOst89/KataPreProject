@@ -27,60 +27,55 @@ public class UserDaoJDBCImpl implements UserDao {
     private static final String SELECT_ALL_USERS = "SELECT id, name, lastName, age FROM users;";
     private static final String CLEAN_TABLE = "TRUNCATE TABLE users;";
 
-    private static final Logger logger = Logger.getLogger(UserDaoJDBCImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserDaoJDBCImpl.class.getName());
 
     public void createUsersTable() {
-
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(CREATE_TABLE);
-            logger.info("Таблица создана!");
+            LOGGER.info("Таблица создана!");
         } catch (SQLException e) {
-            logger.info("Не удалось создать таблицу!");
+            LOGGER.info("Не удалось создать таблицу!");
             e.printStackTrace();
         }
 
     }
 
     public void dropUsersTable() {
-
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(DROP_TABLE);
-            logger.info("Таблица удалена!");
+            LOGGER.info("Таблица удалена!");
         } catch (SQLException e) {
-            logger.info("Не удалось удалить таблицу!");
+            LOGGER.info("Не удалось удалить таблицу!");
             e.printStackTrace();
         }
 
     }
 
     public void saveUser(String name, String lastName, byte age) {
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
-            System.out.println("User с именем - " + name + " добавлен в базу данных!");
+            LOGGER.info("User с именем - " + name + " добавлен в базу данных!");
         } catch (SQLException e) {
-            logger.info("Не удалось добавить пользователя!");
+            LOGGER.info("Не удалось добавить пользователя!");
             e.printStackTrace();
         }
     }
 
     public void removeUserById(long id) {
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_USER)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            logger.info("Пользователь с id " + id + " удален из БД!");
+            LOGGER.info("Пользователь с id " + id + " удален из БД!");
         } catch (SQLException e) {
             e.printStackTrace();
-            logger.info("Не удалось удалить пользователя!");
+            LOGGER.info("Не удалось удалить пользователя!");
         }
     }
 
     public List<User> getAllUsers() {
-
         List<User> userList = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(SELECT_ALL_USERS)) {
@@ -88,26 +83,24 @@ public class UserDaoJDBCImpl implements UserDao {
                 User user = new User(
                         resultSet.getString("name"),
                         resultSet.getString("lastName"),
-                        resultSet.getByte("age")
-                );
+                        resultSet.getByte("age"));
                 user.setId(resultSet.getLong("id"));
                 userList.add(user);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            logger.info("Не удалось получить данные из таблицы о пользователях!");
+            LOGGER.info("Не удалось получить данные из таблицы о пользователях!");
         }
         return userList;
     }
 
     public void cleanUsersTable() {
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(CLEAN_TABLE)) {
             preparedStatement.executeUpdate();
-            logger.info("Таблица очищена!");
+            LOGGER.info("Таблица очищена!");
         } catch (SQLException e) {
             e.printStackTrace();
-            logger.info("Не удалось очистить таблицу!");
+            LOGGER.info("Не удалось очистить таблицу!");
         }
     }
 }
