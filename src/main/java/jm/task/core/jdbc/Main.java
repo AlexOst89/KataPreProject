@@ -31,7 +31,6 @@ public class Main {
 
         //UserDao userDao = new UserDaoHibernateImpl();
 
-
         userDao.createUsersTable();
         userDao.saveUser("Григорий", "Петров", (byte) 20);
         userDao.saveUser("Александр", "Сидоров", (byte) 43);
